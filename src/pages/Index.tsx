@@ -19,7 +19,7 @@ const Index = () => {
     setIsLoading(true);
     setPrediction(null);
     
-    // Simulate ML model processing delay
+    // Simulate ML model processing delay (increased to feel more realistic)
     setTimeout(() => {
       try {
         const result = predictPrice(data);
@@ -40,7 +40,7 @@ const Index = () => {
       } finally {
         setIsLoading(false);
       }
-    }, 2000);
+    }, 3000); // Increased from 2000ms to 3000ms for a more credible ML experience
   };
 
   return (
