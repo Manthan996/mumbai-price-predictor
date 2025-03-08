@@ -1,4 +1,14 @@
 
+// City selection options
+export const availableCities = [
+  "Mumbai",
+  "Delhi",
+  "Bangalore",
+  "Pune",
+  "Hyderabad",
+  "Chennai"
+];
+
 // Mumbai neighborhoods for the demonstration
 export const mumbaiNeighborhoods = [
   "Andheri East",
@@ -25,7 +35,122 @@ export const mumbaiNeighborhoods = [
   "Worli"
 ];
 
-// Property types common in Mumbai
+// Delhi neighborhoods
+export const delhiNeighborhoods = [
+  "Connaught Place",
+  "Defence Colony",
+  "Dwarka",
+  "Greater Kailash",
+  "Hauz Khas",
+  "Janakpuri",
+  "Lajpat Nagar",
+  "Mayur Vihar",
+  "New Friends Colony",
+  "Paharganj",
+  "Rohini",
+  "Saket",
+  "South Extension",
+  "Vasant Kunj",
+  "Vasant Vihar"
+];
+
+// Bangalore neighborhoods
+export const bangaloreNeighborhoods = [
+  "Indiranagar",
+  "Koramangala",
+  "Whitefield",
+  "HSR Layout",
+  "Jayanagar",
+  "JP Nagar",
+  "Electronic City",
+  "Bannerghatta Road",
+  "Hebbal",
+  "Malleswaram",
+  "Marathahalli",
+  "Yelahanka",
+  "BTM Layout",
+  "MG Road",
+  "Rajajinagar"
+];
+
+// Pune neighborhoods
+export const puneNeighborhoods = [
+  "Koregaon Park",
+  "Kalyani Nagar",
+  "Viman Nagar",
+  "Aundh",
+  "Baner",
+  "Kothrud",
+  "Hadapsar",
+  "Hinjewadi",
+  "Kharadi",
+  "Magarpatta City",
+  "Camp",
+  "Shivaji Nagar",
+  "Kondhwa",
+  "Wakad",
+  "Pimpri-Chinchwad"
+];
+
+// Hyderabad neighborhoods
+export const hyderabadNeighborhoods = [
+  "Banjara Hills",
+  "Jubilee Hills",
+  "Gachibowli",
+  "Madhapur",
+  "HITEC City",
+  "Kondapur",
+  "Kukatpally",
+  "Miyapur",
+  "Secunderabad",
+  "Begumpet",
+  "Ameerpet",
+  "Somajiguda",
+  "Manikonda",
+  "Uppal",
+  "LB Nagar"
+];
+
+// Chennai neighborhoods
+export const chennaiNeighborhoods = [
+  "Anna Nagar",
+  "Adyar",
+  "T. Nagar",
+  "Velachery",
+  "Nungambakkam",
+  "Mylapore",
+  "Porur",
+  "Thoraipakkam",
+  "Sholinganallur",
+  "Guindy",
+  "Perungudi",
+  "Egmore",
+  "Besant Nagar",
+  "Kilpauk",
+  "OMR"
+];
+
+// Get neighborhoods for a given city
+export const getNeighborhoodsByCity = (city: string) => {
+  switch (city) {
+    case "Mumbai":
+      return mumbaiNeighborhoods;
+    case "Delhi":
+      return delhiNeighborhoods;
+    case "Bangalore":
+      return bangaloreNeighborhoods;
+    case "Pune":
+      return puneNeighborhoods;
+    case "Hyderabad":
+      return hyderabadNeighborhoods;
+    case "Chennai":
+      return chennaiNeighborhoods;
+    default:
+      return mumbaiNeighborhoods;
+  }
+};
+
+// Property types common in Indian cities
 export const propertyTypes = [
   "Apartment",
   "Builder Floor",
@@ -56,37 +181,141 @@ export const furnishingOptions = [
   "Fully Furnished"
 ];
 
+// City base rates (per square foot in rupees)
+const cityBaseRates: Record<string, number> = {
+  "Mumbai": 30000,
+  "Delhi": 25000,
+  "Bangalore": 18000,
+  "Pune": 15000,
+  "Hyderabad": 13000,
+  "Chennai": 16000
+};
+
+// Location factors for each city (multiplier on city base rate)
+const cityLocationFactors: Record<string, Record<string, number>> = {
+  "Mumbai": {
+    "Andheri East": 0.73,
+    "Andheri West": 0.93,
+    "Bandra East": 1.40,
+    "Bandra West": 2.17,
+    "Borivali": 0.60,
+    "Chembur": 0.73,
+    "Colaba": 2.60,
+    "Dadar": 1.17,
+    "Goregaon": 0.67,
+    "Juhu": 1.83,
+    "Kandivali": 0.57,
+    "Khar": 1.73,
+    "Lower Parel": 1.50,
+    "Malad": 0.60,
+    "Mira Road": 0.40,
+    "Mulund": 0.57,
+    "Powai": 0.83,
+    "Santacruz": 1.27,
+    "Thane": 0.47,
+    "Versova": 1.00,
+    "Vikhroli": 0.63,
+    "Worli": 2.00
+  },
+  "Delhi": {
+    "Connaught Place": 2.20,
+    "Defence Colony": 1.70,
+    "Dwarka": 0.65,
+    "Greater Kailash": 1.45,
+    "Hauz Khas": 1.50,
+    "Janakpuri": 0.70,
+    "Lajpat Nagar": 1.15,
+    "Mayur Vihar": 0.75,
+    "New Friends Colony": 1.25,
+    "Paharganj": 0.60,
+    "Rohini": 0.55,
+    "Saket": 1.35,
+    "South Extension": 1.60,
+    "Vasant Kunj": 1.40,
+    "Vasant Vihar": 1.80
+  },
+  "Bangalore": {
+    "Indiranagar": 1.60,
+    "Koramangala": 1.70,
+    "Whitefield": 0.85,
+    "HSR Layout": 1.40,
+    "Jayanagar": 1.35,
+    "JP Nagar": 1.20,
+    "Electronic City": 0.65,
+    "Bannerghatta Road": 0.90,
+    "Hebbal": 0.80,
+    "Malleswaram": 1.45,
+    "Marathahalli": 0.80,
+    "Yelahanka": 0.60,
+    "BTM Layout": 1.10,
+    "MG Road": 1.80,
+    "Rajajinagar": 1.25
+  },
+  "Pune": {
+    "Koregaon Park": 1.70,
+    "Kalyani Nagar": 1.60,
+    "Viman Nagar": 1.45,
+    "Aundh": 1.30,
+    "Baner": 1.25,
+    "Kothrud": 1.15,
+    "Hadapsar": 0.75,
+    "Hinjewadi": 0.90,
+    "Kharadi": 0.95,
+    "Magarpatta City": 1.10,
+    "Camp": 1.40,
+    "Shivaji Nagar": 1.35,
+    "Kondhwa": 0.80,
+    "Wakad": 0.85,
+    "Pimpri-Chinchwad": 0.65
+  },
+  "Hyderabad": {
+    "Banjara Hills": 1.80,
+    "Jubilee Hills": 1.95,
+    "Gachibowli": 1.30,
+    "Madhapur": 1.40,
+    "HITEC City": 1.35,
+    "Kondapur": 1.10,
+    "Kukatpally": 0.85,
+    "Miyapur": 0.70,
+    "Secunderabad": 1.00,
+    "Begumpet": 1.25,
+    "Ameerpet": 1.15,
+    "Somajiguda": 1.30,
+    "Manikonda": 0.80,
+    "Uppal": 0.65,
+    "LB Nagar": 0.60
+  },
+  "Chennai": {
+    "Anna Nagar": 1.50,
+    "Adyar": 1.70,
+    "T. Nagar": 1.60,
+    "Velachery": 1.15,
+    "Nungambakkam": 1.80,
+    "Mylapore": 1.65,
+    "Porur": 0.85,
+    "Thoraipakkam": 0.95,
+    "Sholinganallur": 0.90,
+    "Guindy": 1.20,
+    "Perungudi": 0.85,
+    "Egmore": 1.45,
+    "Besant Nagar": 1.75,
+    "Kilpauk": 1.40,
+    "OMR": 0.80
+  }
+};
+
 // This function simulates calling the Python machine learning model
 // In a real application, this would make an API call to a Python backend
 export const predictPrice = (formData: any): { price: number; confidence: number } => {
-  // Location importance factors (realistic for Mumbai market)
-  const locationPricing: Record<string, number> = {
-    "Andheri East": 22000,
-    "Andheri West": 28000,
-    "Bandra East": 42000,
-    "Bandra West": 65000,
-    "Borivali": 18000,
-    "Chembur": 22000,
-    "Colaba": 78000,
-    "Dadar": 35000,
-    "Goregaon": 20000,
-    "Juhu": 55000,
-    "Kandivali": 17000,
-    "Khar": 52000,
-    "Lower Parel": 45000,
-    "Malad": 18000,
-    "Mira Road": 12000,
-    "Mulund": 17000,
-    "Powai": 25000,
-    "Santacruz": 38000,
-    "Thane": 14000,
-    "Versova": 30000,
-    "Vikhroli": 19000,
-    "Worli": 60000
-  };
+  // Get base rate for selected city
+  const cityBaseRate = cityBaseRates[formData.city] || 20000;
   
-  // Get base price for selected neighborhood
-  const basePrice = locationPricing[formData.neighborhood] || 25000;
+  // Get location factor for the selected neighborhood in the selected city
+  const locationFactors = cityLocationFactors[formData.city] || cityLocationFactors["Mumbai"];
+  const locationFactor = locationFactors[formData.neighborhood] || 1.0;
+  
+  // Calculate base price for selected neighborhood
+  const basePrice = cityBaseRate * locationFactor;
   
   // Size factor with diminishing returns for larger properties
   const sizeFactor = Math.pow(formData.size / 1000, 0.9);
@@ -95,7 +324,7 @@ export const predictPrice = (formData: any): { price: number; confidence: number
   const bedroomsFactor = Math.min(1.25, 1 + (formData.bedrooms * 0.07)); 
   const bathroomsFactor = Math.min(1.15, 1 + (formData.bathrooms * 0.04));
   
-  // Property type multipliers based on Mumbai luxury segment
+  // Property type multipliers based on luxury segment
   const propertyTypeFactor = 
     formData.propertyType === "Villa" ? 1.5 :
     formData.propertyType === "Independent House" ? 1.35 :
@@ -148,14 +377,6 @@ export const predictPrice = (formData: any): { price: number; confidence: number
   
   // Add small random factor to confidence
   const confidence = Math.min(0.95, Math.max(0.75, confidenceBase + (Math.random() * 0.04 - 0.02)));
-  
-  // In a real implementation, this would be an API call:
-  // const response = await fetch('/api/predict', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(formData)
-  // });
-  // return await response.json();
   
   return { price, confidence };
 };

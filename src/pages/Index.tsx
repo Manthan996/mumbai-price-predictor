@@ -27,7 +27,7 @@ const Index = () => {
         setPrediction(result);
         toast({
           title: "Prediction Complete",
-          description: "Your property price prediction is ready (Python ML model)",
+          description: `Your property price prediction for ${data.city} is ready (Python ML model)`,
           duration: 3000,
         });
       } catch (error) {

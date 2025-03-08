@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { 
-  mumbaiNeighborhoods, 
+  availableCities,
+  getNeighborhoodsByCity,
   propertyTypes, 
   amenities, 
   furnishingOptions
@@ -22,6 +23,7 @@ interface PredictionFormProps {
 
 export const PredictionForm = ({ onPredict, isLoading }: PredictionFormProps) => {
   const [formData, setFormData] = useState({
+    city: "Mumbai",
     neighborhood: "Andheri West",
     propertyType: "Apartment",
     size: 800,
@@ -31,6 +33,22 @@ export const PredictionForm = ({ onPredict, isLoading }: PredictionFormProps) =>
     furnishing: "Semi-Furnished",
     amenities: ["Parking", "Lift", "Security"] as string[]
   });
+
+  const [neighborhoods, setNeighborhoods] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Update neighborhoods when city changes
+    const cityNeighborhoods = getNeighborhoodsByCity(formData.city);
+    setNeighborhoods(cityNeighborhoods);
+    
+    // Set a default neighborhood from the selected city
+    if (!cityNeighborhoods.includes(formData.neighborhood)) {
+      setFormData(prev => ({ 
+        ...prev, 
+        neighborhood: cityNeighborhoods[0] 
+      }));
+    }
+  }, [formData.city]);
 
   const handleChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -62,6 +80,27 @@ export const PredictionForm = ({ onPredict, isLoading }: PredictionFormProps) =>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div>
+              <Label htmlFor="city" className="text-sm font-medium">
+                City
+              </Label>
+              <Select
+                value={formData.city}
+                onValueChange={(value) => handleChange("city", value)}
+              >
+                <SelectTrigger className="input-field mt-1">
+                  <SelectValue placeholder="Select city" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableCities.map((city) => (
+                    <SelectItem key={city} value={city}>
+                      {city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
               <Label htmlFor="neighborhood" className="text-sm font-medium">
                 Neighborhood
               </Label>
@@ -73,7 +112,7 @@ export const PredictionForm = ({ onPredict, isLoading }: PredictionFormProps) =>
                   <SelectValue placeholder="Select neighborhood" />
                 </SelectTrigger>
                 <SelectContent>
-                  {mumbaiNeighborhoods.map((neighborhood) => (
+                  {neighborhoods.map((neighborhood) => (
                     <SelectItem key={neighborhood} value={neighborhood}>
                       {neighborhood}
                     </SelectItem>

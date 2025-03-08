@@ -98,6 +98,13 @@ export const PredictionResult = ({ prediction, formData, isLoading }: Prediction
               </div>
               
               <div className="space-y-1">
+                <div className="text-neutral-500">City</div>
+                <div className="font-medium truncate">
+                  {formData.city}
+                </div>
+              </div>
+              
+              <div className="space-y-1">
                 <div className="text-neutral-500">Location</div>
                 <div className="font-medium truncate">
                   {formData.neighborhood}

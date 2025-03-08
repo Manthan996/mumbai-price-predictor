@@ -7,33 +7,130 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 
 # This is a simulation of a trained model
-# In a real application, you would train this on actual Mumbai property data
-class MumbaiPropertyPriceModel:
+# In a real application, you would train this on actual property data
+class IndianPropertyPriceModel:
     def __init__(self):
-        # Location importance factors (realistic for Mumbai)
+        # City base rates (per square foot in rupees)
+        self.city_base_rates = {
+            "Mumbai": 30000,
+            "Delhi": 25000,
+            "Bangalore": 18000,
+            "Pune": 15000,
+            "Hyderabad": 13000,
+            "Chennai": 16000
+        }
+        
+        # Location importance factors for each city
         self.location_factors = {
-            "Andheri East": 22000,
-            "Andheri West": 28000,
-            "Bandra East": 42000,
-            "Bandra West": 65000,
-            "Borivali": 18000,
-            "Chembur": 22000,
-            "Colaba": 78000,
-            "Dadar": 35000,
-            "Goregaon": 20000,
-            "Juhu": 55000,
-            "Kandivali": 17000,
-            "Khar": 52000,
-            "Lower Parel": 45000,
-            "Malad": 18000,
-            "Mira Road": 12000,
-            "Mulund": 17000,
-            "Powai": 25000,
-            "Santacruz": 38000,
-            "Thane": 14000,
-            "Versova": 30000,
-            "Vikhroli": 19000,
-            "Worli": 60000
+            "Mumbai": {
+                "Andheri East": 0.73,
+                "Andheri West": 0.93,
+                "Bandra East": 1.40,
+                "Bandra West": 2.17,
+                "Borivali": 0.60,
+                "Chembur": 0.73,
+                "Colaba": 2.60,
+                "Dadar": 1.17,
+                "Goregaon": 0.67,
+                "Juhu": 1.83,
+                "Kandivali": 0.57,
+                "Khar": 1.73,
+                "Lower Parel": 1.50,
+                "Malad": 0.60,
+                "Mira Road": 0.40,
+                "Mulund": 0.57,
+                "Powai": 0.83,
+                "Santacruz": 1.27,
+                "Thane": 0.47,
+                "Versova": 1.00,
+                "Vikhroli": 0.63,
+                "Worli": 2.00
+            },
+            "Delhi": {
+                "Connaught Place": 2.20,
+                "Defence Colony": 1.70,
+                "Dwarka": 0.65,
+                "Greater Kailash": 1.45,
+                "Hauz Khas": 1.50,
+                "Janakpuri": 0.70,
+                "Lajpat Nagar": 1.15,
+                "Mayur Vihar": 0.75,
+                "New Friends Colony": 1.25,
+                "Paharganj": 0.60,
+                "Rohini": 0.55,
+                "Saket": 1.35,
+                "South Extension": 1.60,
+                "Vasant Kunj": 1.40,
+                "Vasant Vihar": 1.80
+            },
+            "Bangalore": {
+                "Indiranagar": 1.60,
+                "Koramangala": 1.70,
+                "Whitefield": 0.85,
+                "HSR Layout": 1.40,
+                "Jayanagar": 1.35,
+                "JP Nagar": 1.20,
+                "Electronic City": 0.65,
+                "Bannerghatta Road": 0.90,
+                "Hebbal": 0.80,
+                "Malleswaram": 1.45,
+                "Marathahalli": 0.80,
+                "Yelahanka": 0.60,
+                "BTM Layout": 1.10,
+                "MG Road": 1.80,
+                "Rajajinagar": 1.25
+            },
+            "Pune": {
+                "Koregaon Park": 1.70,
+                "Kalyani Nagar": 1.60,
+                "Viman Nagar": 1.45,
+                "Aundh": 1.30,
+                "Baner": 1.25,
+                "Kothrud": 1.15,
+                "Hadapsar": 0.75,
+                "Hinjewadi": 0.90,
+                "Kharadi": 0.95,
+                "Magarpatta City": 1.10,
+                "Camp": 1.40,
+                "Shivaji Nagar": 1.35,
+                "Kondhwa": 0.80,
+                "Wakad": 0.85,
+                "Pimpri-Chinchwad": 0.65
+            },
+            "Hyderabad": {
+                "Banjara Hills": 1.80,
+                "Jubilee Hills": 1.95,
+                "Gachibowli": 1.30,
+                "Madhapur": 1.40,
+                "HITEC City": 1.35,
+                "Kondapur": 1.10,
+                "Kukatpally": 0.85,
+                "Miyapur": 0.70,
+                "Secunderabad": 1.00,
+                "Begumpet": 1.25,
+                "Ameerpet": 1.15,
+                "Somajiguda": 1.30,
+                "Manikonda": 0.80,
+                "Uppal": 0.65,
+                "LB Nagar": 0.60
+            },
+            "Chennai": {
+                "Anna Nagar": 1.50,
+                "Adyar": 1.70,
+                "T. Nagar": 1.60,
+                "Velachery": 1.15,
+                "Nungambakkam": 1.80,
+                "Mylapore": 1.65,
+                "Porur": 0.85,
+                "Thoraipakkam": 0.95,
+                "Sholinganallur": 0.90,
+                "Guindy": 1.20,
+                "Perungudi": 0.85,
+                "Egmore": 1.45,
+                "Besant Nagar": 1.75,
+                "Kilpauk": 1.40,
+                "OMR": 0.80
+            }
         }
         
         # Property type multipliers
@@ -64,6 +161,7 @@ class MumbaiPropertyPriceModel:
         A real implementation would use: return self.model.predict(processed_input)[0]
         """
         # Extract features
+        city = input_data.get("city", "Mumbai")
         neighborhood = input_data.get("neighborhood", "Andheri West")
         property_type = input_data.get("propertyType", "Apartment")
         size = input_data.get("size", 800)
@@ -73,8 +171,15 @@ class MumbaiPropertyPriceModel:
         furnishing = input_data.get("furnishing", "Semi-Furnished")
         amenities = input_data.get("amenities", [])
         
+        # Get base rate for selected city
+        city_base_rate = self.city_base_rates.get(city, 20000)
+        
+        # Get location factor for the selected neighborhood in the selected city
+        city_locations = self.location_factors.get(city, {})
+        location_factor = city_locations.get(neighborhood, 1.0)
+        
         # Calculate base price based on location
-        base_price = self.location_factors.get(neighborhood, 25000)
+        base_price = city_base_rate * location_factor
         
         # Apply size factor (with diminishing returns for larger properties)
         size_factor = np.power(size / 1000, 0.9)
@@ -94,7 +199,7 @@ class MumbaiPropertyPriceModel:
         
         # Apply amenities factor
         amenities_count = len(amenities)
-        amenities_factor = 1 + (amenities_count > 0 ? 0.02 + (amenities_count - 1) * 0.01 : 0)
+        amenities_factor = 1 + (amenities_count > 0) * (0.02 + (amenities_count - 1) * 0.01)
         
         # Calculate price per square foot
         price_per_sqft = base_price * property_type_factor * age_factor * furnishing_factor * amenities_factor
@@ -126,5 +231,5 @@ class MumbaiPropertyPriceModel:
 
 # For demonstration - in a real app this would be an API endpoint
 def predict_price(input_data):
-    model = MumbaiPropertyPriceModel()
+    model = IndianPropertyPriceModel()
     return model.predict(input_data)
