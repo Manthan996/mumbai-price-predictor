@@ -1,12 +1,76 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState } from "react";
+import { PredictionForm } from "@/components/PredictionForm";
+import { PredictionResult } from "@/components/PredictionResult";
+import { VisualizationPanel } from "@/components/VisualizationPanel";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { predictPrice } from "@/lib/mockData";
+import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
+  const { toast } = useToast();
+  const [formData, setFormData] = useState(null);
+  const [prediction, setPrediction] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handlePredict = (data: any) => {
+    setFormData(data);
+    setIsLoading(true);
+    setPrediction(null);
+    
+    // Simulate ML model processing delay
+    setTimeout(() => {
+      try {
+        const result = predictPrice(data);
+        setPrediction(result);
+        toast({
+          title: "Prediction Complete",
+          description: "Your property price prediction is ready",
+          duration: 3000,
+        });
+      } catch (error) {
+        console.error("Prediction error:", error);
+        toast({
+          title: "Prediction Failed",
+          description: "There was an error generating your prediction",
+          variant: "destructive",
+          duration: 3000,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }, 2000);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-blue-50">
+      <Header />
+      
+      <main className="flex-1 container mx-auto px-4 md:px-6 py-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left column - Input form */}
+          <div className="lg:col-span-5">
+            <PredictionForm 
+              onPredict={handlePredict} 
+              isLoading={isLoading} 
+            />
+          </div>
+          
+          {/* Right column - Results and Visualizations */}
+          <div className="lg:col-span-7 space-y-6">
+            <PredictionResult 
+              prediction={prediction} 
+              formData={formData} 
+              isLoading={isLoading} 
+            />
+            
+            <VisualizationPanel prediction={prediction} />
+          </div>
+        </div>
+      </main>
+      
+      <Footer />
     </div>
   );
 };
