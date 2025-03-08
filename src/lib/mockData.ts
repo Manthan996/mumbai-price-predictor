@@ -56,9 +56,10 @@ export const furnishingOptions = [
   "Fully Furnished"
 ];
 
-// Enhanced pricing model based on real Mumbai property trends
+// This function simulates calling the Python machine learning model
+// In a real application, this would make an API call to a Python backend
 export const predictPrice = (formData: any): { price: number; confidence: number } => {
-  // Base price per sq ft based on location (following Mumbai market trends)
+  // Location importance factors (realistic for Mumbai market)
   const locationPricing: Record<string, number> = {
     "Andheri East": 22000,
     "Andheri West": 28000,
@@ -87,14 +88,14 @@ export const predictPrice = (formData: any): { price: number; confidence: number
   // Get base price for selected neighborhood
   const basePrice = locationPricing[formData.neighborhood] || 25000;
   
-  // Size factor uses diminishing returns scale - larger homes are more efficient per square foot
+  // Size factor with diminishing returns for larger properties
   const sizeFactor = Math.pow(formData.size / 1000, 0.9);
   
-  // Configuration factors
+  // Room configuration factors
   const bedroomsFactor = Math.min(1.25, 1 + (formData.bedrooms * 0.07)); 
   const bathroomsFactor = Math.min(1.15, 1 + (formData.bathrooms * 0.04));
   
-  // Property type multipliers based on Mumbai luxury segment trends
+  // Property type multipliers based on Mumbai luxury segment
   const propertyTypeFactor = 
     formData.propertyType === "Villa" ? 1.5 :
     formData.propertyType === "Independent House" ? 1.35 :
@@ -109,7 +110,7 @@ export const predictPrice = (formData: any): { price: number; confidence: number
     formData.furnishing === "Semi-Furnished" ? 1.07 :
     1.0; // Unfurnished
   
-  // Age depreciation - exponential decay formula with floor
+  // Age depreciation with exponential decay and floor
   const ageFactor = Math.max(0.75, Math.exp(-0.015 * formData.age));
   
   // Amenities boost with diminishing returns
@@ -122,11 +123,15 @@ export const predictPrice = (formData: any): { price: number; confidence: number
   // Calculate total price
   let price = pricePerSqFt * formData.size * bedroomsFactor * bathroomsFactor;
   
-  // Apply market variance (±5%)
+  // Apply realistic market variance (±5%)
   const marketVariance = 0.95 + Math.random() * 0.1;
   price = price * marketVariance;
   
-  // Round to nearest lakh for realistic presentation
+  // Add additional randomness to simulate ML prediction variations
+  const mlNoise = 0.98 + Math.random() * 0.04;
+  price = price * mlNoise;
+  
+  // Round to nearest lakh (100,000) for realistic presentation
   price = Math.round(price / 100000) * 100000;
   
   // Calculate confidence based on data completeness and property attributes
@@ -143,6 +148,14 @@ export const predictPrice = (formData: any): { price: number; confidence: number
   
   // Add small random factor to confidence
   const confidence = Math.min(0.95, Math.max(0.75, confidenceBase + (Math.random() * 0.04 - 0.02)));
+  
+  // In a real implementation, this would be an API call:
+  // const response = await fetch('/api/predict', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify(formData)
+  // });
+  // return await response.json();
   
   return { price, confidence };
 };

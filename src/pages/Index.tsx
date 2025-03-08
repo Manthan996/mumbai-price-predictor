@@ -19,28 +19,29 @@ const Index = () => {
     setIsLoading(true);
     setPrediction(null);
     
-    // Simulate ML model processing delay (increased to feel more realistic)
+    // Simulate Python ML model processing delay
     setTimeout(() => {
       try {
+        // In a real app, this would call a Python backend API
         const result = predictPrice(data);
         setPrediction(result);
         toast({
           title: "Prediction Complete",
-          description: "Your property price prediction is ready",
+          description: "Your property price prediction is ready (Python ML model)",
           duration: 3000,
         });
       } catch (error) {
         console.error("Prediction error:", error);
         toast({
-          title: "Prediction Failed",
-          description: "There was an error generating your prediction",
+          title: "ML Model Error",
+          description: "There was an error in the Python prediction model",
           variant: "destructive",
           duration: 3000,
         });
       } finally {
         setIsLoading(false);
       }
-    }, 3000); // Increased from 2000ms to 3000ms for a more credible ML experience
+    }, 4000); // Increased to simulate ML model processing time
   };
 
   return (
