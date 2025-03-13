@@ -13,7 +13,7 @@ export const Header = () => {
             Powered by Machine Learning
           </Badge>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 animate-slide-down">
-            Mumbai Property Price Predictor
+            Real Estate Genie
           </h1>
           <p className="text-neutral-600 max-w-2xl animate-fade-in">
             Enter your property details to get an accurate machine learning-based prediction of its market value in Mumbai
