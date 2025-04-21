@@ -3,6 +3,7 @@ import { useState } from "react";
 import { PredictionForm } from "@/components/PredictionForm";
 import { PredictionResult } from "@/components/PredictionResult";
 import { VisualizationPanel } from "@/components/VisualizationPanel";
+import { MapComponent } from "@/components/MapComponent";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { predictPrice } from "@/lib/mockData";
@@ -45,7 +46,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-blue-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <Header />
       
       <main className="flex-1 container mx-auto px-4 md:px-6 py-4">
@@ -65,6 +66,14 @@ const Index = () => {
               formData={formData} 
               isLoading={isLoading} 
             />
+            
+            {formData && (
+              <MapComponent 
+                city={formData.city} 
+                neighborhood={formData.neighborhood}
+                isLoading={isLoading}
+              />
+            )}
             
             <VisualizationPanel prediction={prediction} />
           </div>
