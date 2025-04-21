@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,12 +9,14 @@ interface PredictionResultProps {
   prediction: { price: number; confidence: number } | null;
   formData: any;
   isLoading: boolean;
+  onAddToCompare?: () => void;
 }
 
 export const PredictionResult = ({
   prediction,
   formData,
   isLoading,
+  onAddToCompare,
 }: PredictionResultProps) => {
   const [priceDisplay, setPriceDisplay] = useState("0");
   const [progress, setProgress] = useState(0);
@@ -127,7 +128,15 @@ export const PredictionResult = ({
             >
               {priceDisplay}
             </div>
-
+            {onAddToCompare && formData && (
+              <button
+                onClick={onAddToCompare}
+                className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs px-4 py-1 rounded-full transition-colors mb-2"
+                style={{ float: "right" }}
+              >
+                + Add to Compare
+              </button>
+            )}
             <div className="grid grid-cols-2 gap-4 text-sm mt-4">
               <div className="space-y-1">
                 <div className="text-neutral-500">Confidence</div>
