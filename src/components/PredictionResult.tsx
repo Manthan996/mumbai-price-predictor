@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -89,13 +88,10 @@ export const PredictionResult = ({
         prediction,
       };
 
-      const { error } = await supabase
-        .from("saved_properties")
-        .insert([
-          {
-            property_data: propertyData,
-          },
-        ]);
+      const { error } = await supabase.from("saved_properties").insert({
+        property_data: propertyData,
+        user_id: user.id
+      });
 
       if (error) throw error;
 

@@ -29,6 +29,7 @@ export default function SavedProperties() {
       const { data, error } = await supabase
         .from("saved_properties")
         .select("*")
+        .eq('user_id', user?.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
