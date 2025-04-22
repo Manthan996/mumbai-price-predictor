@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { Mail, Eye, EyeOff } from "lucide-react";
 
 export const AuthForm = () => {
@@ -57,14 +57,17 @@ export const AuthForm = () => {
 
       <form onSubmit={handleAuth} className="space-y-4">
         <div className="space-y-2">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            icon={<Mail className="text-muted-foreground" />}
-          />
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="pl-10"
+            />
+          </div>
         </div>
 
         <div className="space-y-2 relative">

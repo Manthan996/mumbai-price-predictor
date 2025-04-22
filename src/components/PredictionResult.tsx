@@ -1,11 +1,13 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { formatPrice } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
-import { useAuth, useToast } from "@/lib/auth";
-import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PredictionResultProps {
   prediction: { price: number; confidence: number } | null;
