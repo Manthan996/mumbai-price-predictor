@@ -33,6 +33,27 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_properties: {
+        Row: {
+          created_at: string | null
+          id: string
+          property_data: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          property_data: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          property_data?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

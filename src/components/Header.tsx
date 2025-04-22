@@ -1,7 +1,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, LogIn, LogOut } from "lucide-react";
+import { Moon, Sun, LogIn, LogOut, BookmarkIcon } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,14 +35,24 @@ export const Header = () => {
         <div className="flex flex-col items-center text-center space-y-2">
           <div className="w-full flex justify-end gap-2">
             {user ? (
-              <Button
-                variant="outline"
-                onClick={handleLogout}
-                className="gap-2"
-              >
-                <LogOut className="h-4 w-4" />
-                Logout
-              </Button>
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate("/saved-properties")}
+                  className="gap-2"
+                >
+                  <BookmarkIcon className="h-4 w-4" />
+                  Saved Properties
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                  className="gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+              </>
             ) : (
               <Button
                 variant="outline"

@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { formatPrice } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
+import { useAuth, useToast } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 
 interface PredictionResultProps {
   prediction: { price: number; confidence: number } | null;
@@ -21,6 +23,8 @@ export const PredictionResult = ({
   const [priceDisplay, setPriceDisplay] = useState("0");
   const [progress, setProgress] = useState(0);
   const [animatePrice, setAnimatePrice] = useState(false);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (isLoading) {
@@ -65,6 +69,45 @@ export const PredictionResult = ({
     if (confidence > 0.7) return "bg-yellow-400";
     if (confidence > 0.6) return "bg-yellow-500";
     return "bg-red-500";
+  };
+
+  const handleSaveProperty = async () => {
+    if (!user) {
+      toast({
+        title: "Please log in",
+        description: "You need to be logged in to save properties",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const propertyData = {
+        ...formData,
+        prediction,
+      };
+
+      const { error } = await supabase
+        .from("saved_properties")
+        .insert([
+          {
+            property_data: propertyData,
+          },
+        ]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Property saved successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -128,15 +171,22 @@ export const PredictionResult = ({
             >
               {priceDisplay}
             </div>
-            {onAddToCompare && formData && (
+            <div className="flex gap-2 mt-4">
+              {onAddToCompare && formData && (
+                <button
+                  onClick={onAddToCompare}
+                  className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs px-4 py-1 rounded-full transition-colors"
+                >
+                  + Add to Compare
+                </button>
+              )}
               <button
-                onClick={onAddToCompare}
-                className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs px-4 py-1 rounded-full transition-colors mb-2"
-                style={{ float: "right" }}
+                onClick={handleSaveProperty}
+                className="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white text-xs px-4 py-1 rounded-full transition-colors"
               >
-                + Add to Compare
+                💾 Save Property
               </button>
-            )}
+            </div>
             <div className="grid grid-cols-2 gap-4 text-sm mt-4">
               <div className="space-y-1">
                 <div className="text-neutral-500">Confidence</div>
