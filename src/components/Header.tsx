@@ -1,17 +1,18 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, LogIn, LogOut, BookmarkIcon } from "lucide-react";
+import { Moon, Sun, LogIn, LogOut, BookmarkIcon, Home as HomeIcon } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
 
 export const Header = () => {
   const { theme, setTheme } = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -34,6 +35,18 @@ export const Header = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center text-center space-y-2">
           <div className="w-full flex justify-end gap-2">
+            {/* Home shortcut (not on home page) */}
+            {location.pathname !== "/" && (
+              <Button
+                variant="outline"
+                onClick={() => navigate("/")}
+                className="gap-2"
+                aria-label="Home"
+              >
+                <HomeIcon className="h-4 w-4" />
+                Home
+              </Button>
+            )}
             {user ? (
               <>
                 <Button
