@@ -1,17 +1,58 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, LogIn, LogOut } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 export const Header = () => {
   const { theme, setTheme } = useTheme();
-  
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Logged out successfully",
+        description: "Come back soon!",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <header className="w-full py-6 mb-4">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center text-center space-y-2">
-          <div className="w-full flex justify-end">
+          <div className="w-full flex justify-end gap-2">
+            {user ? (
+              <Button
+                variant="outline"
+                onClick={handleLogout}
+                className="gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={() => navigate("/auth")}
+                className="gap-2"
+              >
+                <LogIn className="h-4 w-4" />
+                Login
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="icon"
