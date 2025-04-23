@@ -1,4 +1,3 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, LogIn, LogOut, BookmarkIcon, Home as HomeIcon } from "lucide-react";
@@ -7,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
+import { AlertsSheet } from "./AlertsSheet";
 
 export const Header = () => {
   const { theme, setTheme } = useTheme();
@@ -49,6 +49,7 @@ export const Header = () => {
             )}
             {user ? (
               <>
+                <AlertsSheet />
                 <Button
                   variant="outline"
                   onClick={() => navigate("/saved-properties")}

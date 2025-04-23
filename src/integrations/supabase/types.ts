@@ -33,6 +33,39 @@ export type Database = {
         }
         Relationships: []
       }
+      property_alerts: {
+        Row: {
+          city: string
+          created_at: string
+          id: string
+          is_active: boolean
+          max_price: number | null
+          min_price: number | null
+          neighborhood: string | null
+          user_id: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          max_price?: number | null
+          min_price?: number | null
+          neighborhood?: string | null
+          user_id: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          max_price?: number | null
+          min_price?: number | null
+          neighborhood?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       saved_properties: {
         Row: {
           created_at: string | null
