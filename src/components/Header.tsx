@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, LogIn, LogOut, BookmarkIcon, Home as HomeIcon } from "lucide-react";
+import { Moon, Sun, LogIn, LogOut, BookmarkIcon, Home as HomeIcon, MessageSquare } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -50,6 +50,14 @@ export const Header = () => {
             {user ? (
               <>
                 <AlertsSheet />
+                <Button
+                  variant="outline"
+                  onClick={() => navigate("/chat")}
+                  className="gap-2"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  Chat with Experts
+                </Button>
                 <Button
                   variant="outline"
                   onClick={() => navigate("/saved-properties")}

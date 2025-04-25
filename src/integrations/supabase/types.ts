@@ -9,6 +9,70 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          room_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          room_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          room_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_rooms: {
+        Row: {
+          created_at: string | null
+          expert_id: string
+          id: string
+          is_active: boolean | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          expert_id: string
+          id?: string
+          is_active?: boolean | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          expert_id?: string
+          id?: string
+          is_active?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_rooms_expert_id_fkey"
+            columns: ["expert_id"]
+            isOneToOne: false
+            referencedRelation: "property_experts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -63,6 +127,36 @@ export type Database = {
           min_price?: number | null
           neighborhood?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      property_experts: {
+        Row: {
+          created_at: string | null
+          expertise: string
+          id: string
+          is_available: boolean | null
+          name: string
+          user_id: string
+          years_experience: number
+        }
+        Insert: {
+          created_at?: string | null
+          expertise: string
+          id?: string
+          is_available?: boolean | null
+          name: string
+          user_id: string
+          years_experience: number
+        }
+        Update: {
+          created_at?: string | null
+          expertise?: string
+          id?: string
+          is_available?: boolean | null
+          name?: string
+          user_id?: string
+          years_experience?: number
         }
         Relationships: []
       }
